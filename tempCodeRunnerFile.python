@@ -1,0 +1,30 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from tensorflow import keras
+
+# Load data
+data = pd.read_csv('data1.csv')
+
+# Check data
+print(data.columns)
+
+# Split data
+x_train, x_test, y_train, y_test = train_test_split(data.drop('C', axis=1), data['C'], test_size=0.25, random_state=42)
+
+# Define model
+model = keras.Sequential([
+    keras.layers.Dense(10, input_shape=(x_train.shape[1],), activation='relu'),
+    keras.layers.Dense(5, activation='relu'),  
+    keras.layers.Dense(1, activation='sigmoid')  # Assuming binary classification, adjust if needed
+])
+
+# Compile model
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',  # Use appropriate loss function for your task
+    metrics=['accuracy']
+)
+
+# Train model
+model.fit(x_train, y_train, epochs=5)
